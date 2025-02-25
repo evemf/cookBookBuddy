@@ -12,7 +12,14 @@ export default function Home() {
   const [search, setSearch] = useState("");
   
   const { data: recipes, isLoading } = useQuery<Recipe[]>({
-    queryKey: search ? ["/api/recipes/search", { q: search }] : ["/api/recipes"],
+    queryKey: ["/api/recipes", search],
+    queryFn: async () => {
+      const url = search 
+        ? `/api/recipes/search?q=${encodeURIComponent(search)}`
+        : '/api/recipes';
+      const response = await fetch(url);
+      return response.json();
+    },
   });
 
   return (
