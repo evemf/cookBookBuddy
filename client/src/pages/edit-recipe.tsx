@@ -17,6 +17,7 @@ import { insertRecipeSchema, type InsertRecipe, type Recipe } from "@shared/sche
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Image, Loader2 } from "lucide-react";
 
 export default function EditRecipe({ params }: { params?: { id: string } }) {
   const [, setLocation] = useLocation();
@@ -54,6 +55,35 @@ export default function EditRecipe({ params }: { params?: { id: string } }) {
       toast({
         title: "Error",
         description: `Failed to ${isEditing ? "update" : "create"} recipe`,
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("image", file);
+
+    try {
+      const response = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to upload image");
+      }
+
+      const data = await response.json();
+      form.setValue("imageUrl", data.imageUrl);
+      toast({ title: "Image uploaded successfully" });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to upload image",
         variant: "destructive",
       });
     }
@@ -124,19 +154,26 @@ export default function EditRecipe({ params }: { params?: { id: string } }) {
                   )}
                 />
 
-                <FormField
-                  control={form.control}
-                  name="imageUrl"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Image URL</FormLabel>
-                      <FormControl>
-                        <Input {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                <div>
+                  <FormLabel>Recipe Image</FormLabel>
+                  <div className="mt-2 flex items-center gap-4">
+                    <Input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageUpload}
+                      className="flex-1"
+                    />
+                    {form.watch("imageUrl") && (
+                      <div className="relative w-24 h-24 rounded-lg overflow-hidden border">
+                        <img
+                          src={form.watch("imageUrl")}
+                          alt="Recipe preview"
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    )}
+                  </div>
+                </div>
 
                 <div>
                   <FormLabel>Ingredients</FormLabel>
