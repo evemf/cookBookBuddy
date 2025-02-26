@@ -28,11 +28,23 @@ export default function RecipePage({ params }: { params: { id: string } }) {
   });
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="min-h-screen bg-background">
+        <div className="container mx-auto py-8">
+          <div>Loading...</div>
+        </div>
+      </div>
+    );
   }
 
-  if (!recipe) {
-    return <div>Recipe not found</div>;
+  if (!recipe || !recipe.ingredients || !recipe.instructions) {
+    return (
+      <div className="min-h-screen bg-background">
+        <div className="container mx-auto py-8">
+          <div>Recipe not found</div>
+        </div>
+      </div>
+    );
   }
 
   const handleDelete = async () => {
