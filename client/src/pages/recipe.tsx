@@ -25,6 +25,10 @@ export default function RecipePage({ params }: { params: { id: string } }) {
   
   const { data: recipe, isLoading } = useQuery<Recipe>({
     queryKey: ["/api/recipes", params.id],
+    queryFn: async () => {
+      const response = await fetch(`/api/recipes/${params.id}`);
+      return response.json();
+    },
   });
 
   if (isLoading) {
