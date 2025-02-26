@@ -8,7 +8,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 // Servir el frontend desde la carpeta dist
+import { fileURLToPath } from "url";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const frontendPath = path.join(__dirname, "../dist");
+
 app.use(express.static(frontendPath));
 
 // Catch-all para que React maneje el routing
