@@ -20,7 +20,8 @@ export default defineConfig({
   },
   root: path.resolve(__dirname, "client"),
   build: {
-    outDir: path.resolve(__dirname, "dist/public"),  // Directorio de salida
+    outDir: path.resolve(__dirname, "dist"),  // Directorio de salida
+    assetsDir: 'assets',
     emptyOutDir: true,  // Vaciar el directorio de salida antes de la construcción
   },
 });
