@@ -7,12 +7,11 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// 👉 Asegurar que Express sirva el frontend desde /dist
-const frontendPath = path.join(process.cwd(), "dist"); // Cambiado a process.cwd()
+// 👉 Express busca el frontend en `dist`, aunque el backend está en `dist/server`
+const frontendPath = path.join(process.cwd(), "dist");
 
 app.use(express.static(frontendPath));
 
-// Ruta catch-all para React
 app.get("*", (_req, res) => {
   res.sendFile(path.join(frontendPath, "index.html"));
 });
