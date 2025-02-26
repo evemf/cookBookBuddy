@@ -53,11 +53,11 @@ app.use((req, res, next) => {
   } else {
     // Servir archivos estáticos del frontend desde /dist
     const __dirname = path.resolve();
-    app.use(express.static(path.join(__dirname, "dist")));
+    app.use(express.static(path.join(__dirname, "../dist")));
 
     // Servir index.html en cualquier ruta no manejada (para SPA)
     app.get("*", (_req, res) => {
-      res.sendFile(path.join(__dirname, "dist", "index.html"));
+      res.sendFile(path.join(__dirname, "dist", "../dist/index.html"));
     });
   }
 
