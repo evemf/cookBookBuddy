@@ -7,11 +7,8 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-// Configuración de Vite
 export default defineConfig({
-  plugins: [
-    react(),
-  ],
+  plugins: [react()],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "client", "src"),
@@ -20,8 +17,8 @@ export default defineConfig({
   },
   root: path.resolve(__dirname, "client"),
   build: {
-    outDir: path.resolve(__dirname, "dist"),  // Directorio de salida
-    assetsDir: 'assets',
-    emptyOutDir: true,  // Vaciar el directorio de salida antes de la construcción
+    outDir: path.resolve(__dirname, "dist/server/public"),  // ⚠️ Guarda en la carpeta correcta
+    assetsDir: "assets",
+    emptyOutDir: true, // Vaciar el directorio antes de construir
   },
 });
