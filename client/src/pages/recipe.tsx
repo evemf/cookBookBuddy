@@ -22,7 +22,7 @@ import { queryClient } from "@/lib/queryClient";
 export default function RecipePage({ params }: { params: { id: string } }) {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
-  
+
   const { data: recipe, isLoading } = useQuery<Recipe>({
     queryKey: ["/api/recipes", params.id],
     queryFn: async () => {
@@ -122,7 +122,7 @@ export default function RecipePage({ params }: { params: { id: string } }) {
               <div>
                 <h3 className="text-xl font-serif mb-4">Ingredients</h3>
                 <ul className="list-disc list-inside space-y-2">
-                  {recipe.ingredients.map((ingredient, i) => (
+                  {recipe?.ingredients?.map((ingredient, i) => (
                     <li key={i}>{ingredient}</li>
                   ))}
                 </ul>
@@ -130,7 +130,7 @@ export default function RecipePage({ params }: { params: { id: string } }) {
               <div>
                 <h3 className="text-xl font-serif mb-4">Instructions</h3>
                 <ol className="list-decimal list-inside space-y-2">
-                  {recipe.instructions.map((instruction, i) => (
+                  {recipe?.instructions?.map((instruction, i) => (
                     <li key={i}>{instruction}</li>
                   ))}
                 </ol>
