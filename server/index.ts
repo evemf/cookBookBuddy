@@ -1,4 +1,4 @@
-import express, { type Request, Response, NextFunction } from "express";
+import express, { Request, Response, NextFunction } from "express";
 import path from "path";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
@@ -7,16 +7,12 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// Servir el frontend desde la carpeta dist
-import { fileURLToPath } from "url";
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const frontendPath = path.join(__dirname, "../dist");
+// 👉 Asegurar que Express sirva el frontend desde /dist
+const frontendPath = path.join(process.cwd(), "dist"); // Cambiado a process.cwd()
 
 app.use(express.static(frontendPath));
 
-// Catch-all para que React maneje el routing
+// Ruta catch-all para React
 app.get("*", (_req, res) => {
   res.sendFile(path.join(frontendPath, "index.html"));
 });
@@ -24,20 +20,17 @@ app.get("*", (_req, res) => {
 (async () => {
   const server = await registerRoutes(app);
 
-  // Manejo de errores
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     const status = err.status || err.statusCode || 500;
     res.status(status).json({ message: err.message || "Internal Server Error" });
   });
 
-  // Configurar Vite solo en desarrollo
   if (app.get("env") === "development") {
     await setupVite(app, server);
   } else {
     serveStatic(app);
   }
 
-  // Iniciar el servidor en el puerto correcto
   const port = process.env.PORT || 5000;
   server.listen(port, () => {
     log(`Server running on port ${port}`);
